@@ -3,9 +3,10 @@ from . import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('books-viewset',views.BookViewset,'books')
+router.register('books',views.BookViewset)
+router.register('users',views.UserProfilesViewset)
 
 urlpatterns = [
-    path('',views.ProfilesView.as_view()),
-    path('books/', include(router.urls)),
+    #path('',views.ProfilesView.as_view()),
+    path('', include(router.urls)),
 ]

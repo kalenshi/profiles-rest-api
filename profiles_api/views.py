@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from rest_framework.response  import Response
-
+from rest_framework.authentication import TokenAuthentication
+from profiles_api import permissions
 from rest_framework.views import APIView
 from rest_framework import status,viewsets
 from profiles_api.models import UserProfile,Book, Author
@@ -78,3 +79,10 @@ class BookViewset(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             print(serializer.data)
             return Response({})
+
+class UserProfilesViewset(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
+    # Authentication and Permissions
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
