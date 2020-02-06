@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (AbstractBaseUser,
                             PermissionsMixin, BaseUserManager
                             )
@@ -47,6 +48,41 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+    def __str__(self):
+        return self.email
+
+class Book(models.Model):
+    PROGRAMMING = 'prog'
+    MATHEMATICS = 'math'
+    FICTION = 'fic'
+    COMIC = 'com'
+    MYTHOLOGY = 'myth'
+    CATEGORY_CHOICES = [
+        (PROGRAMMING, 'Programming'),
+        (MATHEMATICS, 'Mathematics'),
+        (FICTION, 'Fiction'),
+        (COMIC, 'Comic Book'),
+        (MYTHOLOGY, 'Mythology'),
+    ]
+    #owner = models.ForeignKey('settings.AUTH_USER_MODEL',related_name='my_books',on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    sub_title = models.CharField(max_length=255,blank=True)
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES
+    )
+    pages = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.title
+
+class Author(models.Model):
+    book_id = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='books')
+    first_name = models.CharField(max_length=80)
+    last_name = models.CharField(max_length=80)
+    initials = models.CharField(max_length=5, blank=True)
+    email = models.EmailField()
 
     def __str__(self):
         return self.email
