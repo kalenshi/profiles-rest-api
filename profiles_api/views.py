@@ -3,7 +3,7 @@ from rest_framework.response  import Response
 from rest_framework.authentication import TokenAuthentication
 from profiles_api import permissions
 from rest_framework.views import APIView
-from rest_framework import status,viewsets
+from rest_framework import status,viewsets,filters
 from profiles_api.models import UserProfile,Book, Author
 from profiles_api.serializers import UserProfileSerializer,BookSerializer
 
@@ -86,3 +86,5 @@ class UserProfilesViewset(viewsets.ModelViewSet):
     # Authentication and Permissions
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('email','first_name','last_name',)
