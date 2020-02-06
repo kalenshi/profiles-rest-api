@@ -3,6 +3,7 @@ from rest_framework.response  import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+from rest_framework.permissions import IsAuthenticated
 from profiles_api import permissions
 from rest_framework.views import APIView
 from rest_framework import status,viewsets,filters
@@ -49,6 +50,11 @@ class ProfilesView(APIView):
 class BookViewset(viewsets.ModelViewSet):
 
     serializer_class = BookSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (
+                permissions.UpdateOwnBook,
+                IsAuthenticated
+    )
     queryset = Book.objects.all()
 
     def list(self, request):
@@ -59,7 +65,7 @@ class BookViewset(viewsets.ModelViewSet):
     def create(self,request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=self.request.user)
             return Response(
                 serializer.data,
                 status=status.HTTP_200_OK
@@ -71,16 +77,16 @@ class BookViewset(viewsets.ModelViewSet):
                 )
 
     def retrieve(self,request,pk=None):
-        if not pk:
-            return Response({'Error': 'Invalid Request'},status=status.HTTP_204_NO_CONTENT)
-        else:
-            queryset = get_object_or_404(Book, pk=pk)
-            print(queryset)
-            serializer = self.serializer_class(data=queryset)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            print(serializer.data)
-            return Response({})
+        book = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(book)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+    # def perform_create(self,serializer):
+    #     """Sets the owner to the current logged in user"""
+    #     serializer.save(owner=self.request.user)
+
 
 class UserProfilesViewset(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
