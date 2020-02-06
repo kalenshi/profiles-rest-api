@@ -5,16 +5,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     #confirm_password = serializers.CharField(max_length=20,style={'input_type':'password'})
     class Meta():
         model = UserProfile
-        fields = ['first_name','last_name','email','id', 'password']
+        fields = ('id','first_name','last_name','email', 'password')
         extra_kwargs = {
             'password':{
                 'write_only':True,
                 'style': {
                     'input_type':'password'
                 }
-            },
-            'id': {
-                'read_only':True
             }
         }
 
@@ -32,10 +29,15 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Book
-        exclude =('id',)
+        fields =('id', 'owner', 'title', 'sub_title','pages')
+        extra_kwargs = {
+            'owner':{
+                'read_only':True
+            }
+        }
 
 class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Author
-        exclude =('id', )
+        fields =('id', )
