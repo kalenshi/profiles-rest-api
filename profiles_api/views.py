@@ -1,6 +1,8 @@
 from django.shortcuts import render,get_object_or_404
 from rest_framework.response  import Response
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 from profiles_api import permissions
 from rest_framework.views import APIView
 from rest_framework import status,viewsets,filters
@@ -88,3 +90,7 @@ class UserProfilesViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('email','first_name','last_name',)
+
+class UserLoginView(ObtainAuthToken):
+    """Handle creating user authentication token"""
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
