@@ -19,5 +19,5 @@ from profiles_api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profiles/',include('profiles_api.urls')),
+    path('api/',include('profiles_api.urls')),
 ]

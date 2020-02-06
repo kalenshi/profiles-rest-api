@@ -65,7 +65,7 @@ class Book(models.Model):
         (COMIC, 'Comic Book'),
         (MYTHOLOGY, 'Mythology'),
     ]
-    #owner = models.ForeignKey('settings.AUTH_USER_MODEL',related_name='my_books',on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='my_books',on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     sub_title = models.CharField(max_length=255,blank=True)
     category = models.CharField(

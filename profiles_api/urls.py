@@ -7,6 +7,6 @@ router.register('books',views.BookViewset)
 router.register('users',views.UserProfilesViewset)
 
 urlpatterns = [
-    #path('',views.ProfilesView.as_view()),
-    path('', include(router.urls)),
+    path('',views.UserLoginView.as_view()),
+    path('profiles/', include(router.urls)),
 ]
